@@ -102,12 +102,15 @@ clusterrolebinding.rbac.authorization.k8s.io/website-controller created
 Finalmente creamos el pod. Hemos creado un deployment con la imagen del controller y con el sidecar que hace de proxy con el servidor de APIs:
 
 ```yaml
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: website-controller
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: website-controller
   template:
     metadata:
       name: website-controller
@@ -125,7 +128,6 @@ spec:
 ```ps
 kubectl apply -f .\website-controller.yaml
 ```
-
 
 # Analisis
 

@@ -2,24 +2,24 @@
   "apiVersion": "apps/v1",
   "kind": "Deployment",
   "metadata": {
-    "name": "[NAME]",
+    "name": "kubia-website",
     "labels": {
-      "webserver": "[NAME]",
-      "nombre":"[NOMBRE]"
+      "webserver": "kubia-website",
+      "nombre":"Eugenio"
     }
   },
   "spec": {
     "replicas": 1,
     "selector":{
       "matchLabels":{
-        "webserver": "[NAME]"
+        "webserver": "kubia-website"
       }
     },
     "template": {
       "metadata": {
-        "name": "[NAME]",
+        "name": "kubia-website",
         "labels": {
-          "webserver": "[NAME]"
+          "webserver": "kubia-website"
         }
       },
       "spec": {
@@ -47,7 +47,7 @@
             "env": [
               {
                 "name": "GIT_SYNC_REPO",
-                "value": "[GIT-REPO]"
+                "value": "https://github.com/luksa/kubia-website-example.git"
               },
               {
                 "name": "GIT_SYNC_DEST",
@@ -86,3 +86,4 @@
     }
   }
 }
+

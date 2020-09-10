@@ -37,7 +37,7 @@ func main() {
 				log.Fatal(err)
 			}
 
-			log.Printf("Received watch event: %s: %s: %s\n", event.Type, event.Object.Metadata.Name, event.Object.Spec.GitRepo)
+			log.Printf("Received watch event: %s: %s: %s %s\n", event.Type, event.Object.Metadata.Name, event.Object.Spec.Nombre, event.Object.Spec.GitRepo)
 
 			//Procesa el evento
 			if event.Type == "ADDED" {
@@ -52,12 +52,12 @@ func main() {
 
 func createWebsite(website v1.Website) {
 	createResource(website, "api/v1", "services", "service-template.json")
-	createResource(website, "apis/extensions/v1beta1", "deployments", "deployment-template.json")
+	createResource(website, "apis/apps/v1", "deployments", "deployment-template.json")
 }
 
 func deleteWebsite(website v1.Website) {
 	deleteResource(website, "api/v1", "services", getName(website))
-	deleteResource(website, "apis/extensions/v1beta1", "deployments", getName(website))
+	deleteResource(website, "apis/apps/v1", "deployments", getName(website))
 }
 
 //Metodo que crea un recurso en el API Server
@@ -71,6 +71,7 @@ func createResource(webserver v1.Website, apiGroup string, kind string, filename
 	//Reemplaza de la plantilla los placeholders NAME y GIT-REPO
 	template := strings.Replace(string(templateBytes), "[NAME]", getName(webserver), -1)
 	template = strings.Replace(template, "[GIT-REPO]", webserver.Spec.GitRepo, -1)
+	template = strings.Replace(template, "[NOMBRE]", webserver.Spec.Nombre, -1)
 
 	//Hace el post al API Server solicitando la creación. En el body se envia el resultado de aplicar el template
 	resp, err := http.Post(fmt.Sprintf("http://localhost:8001/%s/namespaces/%s/%s/", apiGroup, webserver.Metadata.Namespace, kind), "application/json", strings.NewReader(template))
